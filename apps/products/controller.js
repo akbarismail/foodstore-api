@@ -2,10 +2,22 @@ const Products = require('./model');
 const path = require('path');
 const fs = require('fs');
 const { rootPath } = require('../config');
+const Categories = require('../categories/model');
 
 async function store(req, res, next) {
   try {
-    const payload = req.body;
+    let payload = req.body;
+
+    if (payload.category) {
+      let categories = await Categories.findOne({
+        name: { $regex: payload.category, $options: 'i' },
+      });
+      if (categories) {
+        payload = { ...payload, category: categories._id };
+      } else {
+        delete payload.category;
+      }
+    }
 
     if (req.file) {
       let tmp_path = req.file.path;
@@ -72,7 +84,18 @@ async function index(req, res, next) {
 
 async function update(req, res, next) {
   try {
-    const payload = req.body;
+    let payload = req.body;
+
+    if (payload.category) {
+      let categories = await Categories.findOne({
+        name: { $regex: payload.category, $options: 'i' },
+      });
+      if (categories) {
+        payload = { ...payload, category: categories._id };
+      } else {
+        delete payload.category;
+      }
+    }
 
     if (req.file) {
       let tmp_path = req.file.path;
