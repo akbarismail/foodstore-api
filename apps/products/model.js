@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { model, Schema } = mongoose;
 
-const productSchema = Schema(
+const productSchema = new Schema(
   {
     name: {
       type: String,
@@ -21,6 +21,12 @@ const productSchema = Schema(
       type: Schema.Types.ObjectId,
       ref: 'Categories',
     },
+    tags: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Tags',
+      },
+    ],
   },
   { timestamps: true }
 );
