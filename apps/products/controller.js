@@ -106,7 +106,7 @@ async function index(req, res, next) {
       .skip(parseInt(skip))
       .populate('category')
       .populate('tags');
-    res.json(products);
+    return res.json(products);
   } catch (error) {
     next(error);
   }
