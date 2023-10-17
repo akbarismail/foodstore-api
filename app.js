@@ -8,6 +8,7 @@ const authRouter = require('./apps/users/router');
 const productRouter = require('./apps/products/router');
 const categoryRouter = require('./apps/categories/router');
 const tagRouter = require('./apps/tags/router');
+const { decodeToken } = require('./apps/auth/middleware');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(decodeToken());
 app.use('/auth/v1', authRouter);
 app.use('/api/v1', productRouter);
 app.use('/api/v1', categoryRouter);
