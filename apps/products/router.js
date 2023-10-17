@@ -8,12 +8,12 @@ router.get('/products', productsController.index);
 router.post(
   '/products',
   multer({ dest: os.tmpdir() }).single('image'),
-  productsController.store
+  productsController.store,
 );
 router.put(
   '/products/:id',
   multer({ dest: os.tmpdir() }).single('image'),
-  productsController.update
+  productsController.update,
 );
 router.delete('/products/:id', productsController.destroy);
 

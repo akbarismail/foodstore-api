@@ -15,6 +15,7 @@ async function store(req, res, next) {
     }
     next(error);
   }
+  return true;
 }
 
 async function update(req, res, next) {
@@ -23,7 +24,7 @@ async function update(req, res, next) {
     const categories = await Categories.findOneAndUpdate(
       { _id: req.params.id },
       payload,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
     return res.json(categories);
   } catch (error) {
@@ -36,6 +37,7 @@ async function update(req, res, next) {
     }
     next(error);
   }
+  return true;
 }
 
 async function destroy(req, res, next) {
@@ -47,6 +49,7 @@ async function destroy(req, res, next) {
   } catch (error) {
     next(error);
   }
+  return true;
 }
 
 module.exports = {

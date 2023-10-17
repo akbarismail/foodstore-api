@@ -15,6 +15,7 @@ async function store(req, res, next) {
     }
     next(error);
   }
+  return true;
 }
 
 async function update(req, res, next) {
@@ -35,6 +36,7 @@ async function update(req, res, next) {
     }
     next(error);
   }
+  return true;
 }
 
 async function destroy(req, res, next) {
@@ -44,6 +46,7 @@ async function destroy(req, res, next) {
   } catch (error) {
     next(error);
   }
+  return true;
 }
 
 module.exports = { store, update, destroy };

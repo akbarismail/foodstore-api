@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const { Schema, model } = mongoose;
 const bcrypt = require('bcrypt');
 
@@ -27,15 +28,15 @@ const usersSchema = new Schema(
     },
     token: [String],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 usersSchema.path('email').validate(
-  function (value) {
+  (value) => {
     const EMAIL_RE = /^([\w.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     return EMAIL_RE.test(value);
   },
-  (attr) => `${attr.value} harus email yang valid!`
+  (attr) => `${attr.value} harus email yang valid!`,
 );
 
 usersSchema.path('email').validate(async function (value) {
@@ -43,7 +44,7 @@ usersSchema.path('email').validate(async function (value) {
     const count = await this.model('Users').count({ email: value });
     return !count;
   } catch (error) {
-    throw error;
+    return error;
   }
 });
 

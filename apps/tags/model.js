@@ -9,7 +9,7 @@ const tagsSchema = new Schema(
       required: [true, 'Nama tags harus diisi'],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = model('Tags', tagsSchema);

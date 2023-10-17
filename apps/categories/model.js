@@ -9,7 +9,7 @@ const categoriesSchema = new Schema(
       required: [true, 'Nama kategori harus diisi'],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = model('Categories', categoriesSchema);
