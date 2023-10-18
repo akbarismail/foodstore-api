@@ -47,6 +47,7 @@ async function login(req, res, next) {
     // create json web token
     const signed = jsonwebtoken.sign(user, config.secretKey);
     await Users.findOneAndUpdate({ _id: user._id }, { $push: { token: signed } }, { new: true });
+
     return res.json({
       message: 'logged in successfully',
       user,

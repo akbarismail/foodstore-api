@@ -4,9 +4,18 @@ const Products = require('./model');
 const { rootPath } = require('../config');
 const Categories = require('../categories/model');
 const Tags = require('../tags/model');
+const { policyFor } = require('../policy');
 
 async function store(req, res, next) {
   try {
+    const policy = policyFor(req.user);
+    if (!policy.can('create', 'Products')) {
+      return res.json({
+        error: 1,
+        message: 'You do not have an access for create product',
+      });
+    }
+
     let payload = req.body;
 
     if (payload.category) {
@@ -104,12 +113,18 @@ async function index(req, res, next) {
       criteria = { ...criteria, tags: { $in: findTags.map((tag) => tag._id) } };
     }
 
+    const count = await Products.find(criteria).countDocuments();
+
     const products = await Products.find(criteria)
       .limit(parseInt(limit, 10))
       .skip(parseInt(skip, 10))
       .populate('category')
-      .populate('tags');
-    return res.json(products);
+      .populate('tags')
+      .select('-__v');
+    return res.json({
+      data: products,
+      count,
+    });
   } catch (error) {
     next(error);
   }
@@ -119,6 +134,14 @@ async function index(req, res, next) {
 
 async function update(req, res, next) {
   try {
+    const policy = policyFor(req.user);
+    if (!policy.can('update', 'Products')) {
+      return res.json({
+        error: 1,
+        message: 'You do not have an access for update product',
+      });
+    }
+
     let payload = req.body;
 
     if (payload.category) {
@@ -205,6 +228,14 @@ async function update(req, res, next) {
 
 async function destroy(req, res, next) {
   try {
+    const policy = policyFor(req.user);
+    if (!policy.can('delete', 'Products')) {
+      return res.json({
+        error: 1,
+        message: 'You do not have an access for delete product',
+      });
+    }
+
     const products = await Products.findOneAndDelete({ _id: req.params.id });
     const currentImage = `${rootPath}/public/upload/${products.image_url}`;
     if (fs.existsSync(currentImage)) {
