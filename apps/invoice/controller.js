@@ -7,8 +7,8 @@ async function index(req, res) {
     const { orderId } = req.params;
 
     const invoice = await Invoices.findOne({ order: orderId })
-        .populate('order')
-        .populate('user');
+      .populate('order')
+      .populate('user');
 
     const policy = policyFor(req.user);
     const subjectInvoice = subject('Invoices', { ...invoice, user_id: invoice.user._id });

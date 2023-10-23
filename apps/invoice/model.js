@@ -33,6 +33,6 @@ const invoiceSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Orders',
   },
-}, {timestamps: true});
+}, { timestamps: true });
 
 module.exports = model('Invoices', invoiceSchema);
