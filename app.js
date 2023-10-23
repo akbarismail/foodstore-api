@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors');
 
 const authRouter = require('./apps/users/router');
 const productRouter = require('./apps/products/router');
@@ -10,6 +11,9 @@ const categoryRouter = require('./apps/categories/router');
 const tagRouter = require('./apps/tags/router');
 const regionRouter = require('./apps/region/router');
 const deliveryRouter = require('./apps/delivery-address/router');
+const cartRouter = require('./apps/cart/router');
+const orderRouter = require('./apps/order/router');
+const invoiceRouter = require('./apps/invoice/router');
 const { decodeToken } = require('./apps/auth/middleware');
 
 const app = express();
@@ -24,6 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cors());
 app.use(decodeToken());
 app.use('/auth/v1', authRouter);
 app.use('/api/v1', productRouter);
@@ -31,6 +36,9 @@ app.use('/api/v1', categoryRouter);
 app.use('/api/v1', tagRouter);
 app.use('/api/v1', regionRouter);
 app.use('/api/v1', deliveryRouter);
+app.use('/api/v1', cartRouter);
+app.use('/api/v1', orderRouter);
+app.use('/api/v1', invoiceRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
