@@ -15,7 +15,7 @@ async function store(req, res, next) {
   }
 
   try {
-    const { deliveryAddress, deliveryFee } = req.body;
+    const payload = req.body;
 
     const items = await CartItems.find({ user: req.user._id }).populate('product');
     if (!items.length) {
@@ -25,7 +25,7 @@ async function store(req, res, next) {
       });
     }
 
-    const address = await DeliveryAddress.findOne({ _id: deliveryAddress });
+    const address = await DeliveryAddress.findOne({ _id: payload.delivery_address });
     if (!address) {
       return res.json({
         error: 1,
@@ -36,14 +36,13 @@ async function store(req, res, next) {
     const order = new Orders({
       _id: new mongoose.mongo.ObjectId(),
       status: 'waiting_payment',
-      delivery_fee: deliveryFee,
+      delivery_fee: payload.delivery_fee,
       delivery_address: {
-        province: address.province,
-        regency: address.regency,
-        district: address.district,
-        village: address.village,
-        detail: address.detail,
-
+        provinsi: address.provinsi,
+        kabupaten: address.kabupaten,
+        kecamatan: address.kecamatan,
+        kelurahan: address.kelurahan,
+        detail_alamat: address.detail_alamat,
       },
       user: req.user._id,
     });
@@ -90,12 +89,13 @@ async function index(req, res, next) {
   try {
     const { limit = 10, skip = 0 } = req.query;
 
-    const count = await Orders.find({ user: req.user._id }).countDocuments();
+    const count = await Orders
+      .find({ user: req.user._id }).countDocuments();
 
     const orders = await Orders
       .find({ user: req.user._id })
-      .limit(parseInt(limit, 10))
-      .skip(parseInt(skip, 10))
+      .limit(+limit)
+      .skip(+skip)
       .populate('order_items')
       .sort('-createdAt');
 

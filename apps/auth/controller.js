@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const jsonwebtoken = require('jsonwebtoken');
 const config = require('../config');
-const Users = require('./model');
+const Users = require('../users/model');
 const { getToken } = require('../utils/get-token');
 
 async function register(req, res, next) {

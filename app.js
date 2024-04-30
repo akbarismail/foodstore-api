@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-const authRouter = require('./apps/users/router');
+const authRouter = require('./apps/auth/router');
 const productRouter = require('./apps/products/router');
 const categoryRouter = require('./apps/categories/router');
 const tagRouter = require('./apps/tags/router');
@@ -30,15 +30,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors());
 app.use(decodeToken());
-app.use('/auth/v1', authRouter);
-app.use('/api/v1', productRouter);
-app.use('/api/v1', categoryRouter);
-app.use('/api/v1', tagRouter);
-app.use('/api/v1', regionRouter);
-app.use('/api/v1', deliveryRouter);
-app.use('/api/v1', cartRouter);
-app.use('/api/v1', orderRouter);
-app.use('/api/v1', invoiceRouter);
+app.use('/auth', authRouter);
+app.use('/api', productRouter);
+app.use('/api', categoryRouter);
+app.use('/api', tagRouter);
+app.use('/api', regionRouter);
+app.use('/api', deliveryRouter);
+app.use('/api', cartRouter);
+app.use('/api', orderRouter);
+app.use('/api', invoiceRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

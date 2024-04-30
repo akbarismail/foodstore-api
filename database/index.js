@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
-const { mongoDbUri, dbName } = require('../apps/config');
-
-const db = mongoose.connection;
+const {
+  dbHost, dbPort, dbUser, dbPass, dbName,
+} = require('../apps/config');
 
 (async () => {
   try {
-    const uri = `${mongoDbUri}/${dbName}`;
+    const uri = `mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`;
     await mongoose.connect(uri);
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
   }
 })();
 
-module.exports = db;
+module.exports = mongoose.connection;

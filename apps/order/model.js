@@ -1,5 +1,8 @@
+const mongoose = require('mongoose');
 const { Schema, model } = require('mongoose');
 const Invoices = require('../invoice/model');
+// eslint-disable-next-line import/order
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const ordersSchema = new Schema({
   status: {
@@ -12,11 +15,11 @@ const ordersSchema = new Schema({
     default: 0,
   },
   delivery_address: {
-    province: { type: String, required: [true, 'Province must be filled'] },
-    regency: { type: String, required: [true, 'Regency must be filled'] },
-    district: { type: String, required: [true, 'District must be filled'] },
-    village: { type: String, required: [true, 'Village must be filled'] },
-    detail: { type: String },
+    provinsi: { type: String, required: [true, 'Province must be filled'] },
+    kabupaten: { type: String, required: [true, 'Regency must be filled'] },
+    kecamatan: { type: String, required: [true, 'District must be filled'] },
+    kelurahan: { type: String, required: [true, 'Village must be filled'] },
+    detail_alamat: { type: String },
   },
   user: {
     type: Schema.Types.ObjectId,
@@ -33,6 +36,8 @@ const ordersSchema = new Schema({
 ordersSchema.virtual('items_count').get(function () {
   return this.order_items.reduce((total, item) => total + parseInt(item.qty, 10), 0);
 });
+
+ordersSchema.plugin(AutoIncrement, { inc_field: 'order_number' });
 
 ordersSchema.post('save', async function () {
   const subTotal = this.order_items.reduce((sum, item) => {

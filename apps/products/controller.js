@@ -7,6 +7,7 @@ const Tags = require('../tags/model');
 const { policyFor } = require('../policy');
 
 async function store(req, res, next) {
+  let payload = req.body;
   try {
     const policy = policyFor(req.user);
     if (!policy.can('create', 'Products')) {
@@ -15,8 +16,6 @@ async function store(req, res, next) {
         message: 'You do not have an access for create product',
       });
     }
-
-    let payload = req.body;
 
     if (payload.category) {
       const categories = await Categories.findOne({
@@ -38,10 +37,8 @@ async function store(req, res, next) {
 
     if (req.file) {
       const tmpPath = req.file.path;
-      const originalExt = req.file.originalname.split('.')[
-        req.file.originalname.split('.').length - 1
-      ];
-      const filename = `${req.file.filename}.${originalExt}`;
+      const originalExt = req.file.originalname.split('.');
+      const filename = `${req.file.filename}.${originalExt[1]}`;
       const targetPath = path.resolve(rootPath, `public/upload/${filename}`);
 
       const src = fs.createReadStream(tmpPath);
@@ -68,11 +65,13 @@ async function store(req, res, next) {
         }
         return true;
       });
+
       src.on('error', async (error) => {
         next(error);
       });
     } else {
-      const products = await Products(payload).save();
+      const products = new Products(payload);
+      await products.save();
       return res.json(products);
     }
   } catch (error) {
@@ -93,6 +92,7 @@ async function index(req, res, next) {
     const {
       limit = 10, skip = 0, q = '', category = '', tags = [],
     } = req.query;
+
     let criteria = {};
 
     if (q.length) {
@@ -104,7 +104,7 @@ async function index(req, res, next) {
         name: { $regex: `${category}`, $options: 'i' },
       });
       if (findCategory) {
-        criteria = { ...criteria, category: category._id };
+        criteria = { ...criteria, category: findCategory._id };
       }
     }
 
@@ -116,8 +116,8 @@ async function index(req, res, next) {
     const count = await Products.find(criteria).countDocuments();
 
     const products = await Products.find(criteria)
-      .limit(parseInt(limit, 10))
-      .skip(parseInt(skip, 10))
+      .limit(+limit)
+      .skip(+skip)
       .populate('category')
       .populate('tags')
       .select('-__v');
@@ -133,6 +133,7 @@ async function index(req, res, next) {
 }
 
 async function update(req, res, next) {
+  let payload = req.body;
   try {
     const policy = policyFor(req.user);
     if (!policy.can('update', 'Products')) {
@@ -141,8 +142,6 @@ async function update(req, res, next) {
         message: 'You do not have an access for update product',
       });
     }
-
-    let payload = req.body;
 
     if (payload.category) {
       const categories = await Categories.findOne({
@@ -164,10 +163,8 @@ async function update(req, res, next) {
 
     if (req.file) {
       const tmpPath = req.file.path;
-      const originalExt = req.file.originalname.split('.')[
-        req.file.originalname.split('.').length - 1
-      ];
-      const filename = `${req.file.filename}.${originalExt}`;
+      const originalExt = req.file.originalname.split('.');
+      const filename = `${req.file.filename}.${originalExt[1]}`;
       const targetPath = path.resolve(rootPath, `public/upload/${filename}`);
 
       const src = fs.createReadStream(tmpPath);
@@ -202,6 +199,7 @@ async function update(req, res, next) {
         }
         return true;
       });
+
       src.on('error', async (error) => {
         next(error);
       });

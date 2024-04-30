@@ -17,10 +17,10 @@ async function getProvince(req, res) {
 async function getRegency(req, res) {
   const dbRegency = path.resolve(__dirname, './data/regencies.csv');
   try {
-    const { parentCode } = req.query;
+    const { kodeInduk } = req.query;
     const data = await csv().fromFile(dbRegency);
-    if (!parentCode) return res.json(data);
-    return res.json(data.filter((value) => value.kode_provinsi === parentCode));
+    if (!kodeInduk) return res.json(data);
+    return res.json(data.filter((value) => value.kode_provinsi === kodeInduk));
   } catch (err) {
     return res.json({
       error: 1,
@@ -32,10 +32,10 @@ async function getRegency(req, res) {
 async function getDistrict(req, res) {
   const dbDistrict = path.resolve(__dirname, './data/districts.csv');
   try {
-    const { parentCode } = req.query;
+    const { kodeInduk } = req.query;
     const data = await csv().fromFile(dbDistrict);
-    if (!parentCode) return res.json(data);
-    return res.json(data.filter((value) => value.kode_kabupaten === parentCode));
+    if (!kodeInduk) return res.json(data);
+    return res.json(data.filter((value) => value.kode_kabupaten === kodeInduk));
   } catch (err) {
     return res.json({
       error: 1,
@@ -47,10 +47,10 @@ async function getDistrict(req, res) {
 async function getVillage(req, res) {
   const dbVillage = path.resolve(__dirname, './data/villages.csv');
   try {
-    const { parentCode } = req.query;
+    const { kodeInduk } = req.query;
     const data = await csv().fromFile(dbVillage);
-    if (!parentCode) return res.json(data);
-    return res.json(data.filter((value) => value.kode_kecamatan === parentCode));
+    if (!kodeInduk) return res.json(data);
+    return res.json(data.filter((value) => value.kode_kecamatan === kodeInduk));
   } catch (err) {
     return res.json({
       error: 1,

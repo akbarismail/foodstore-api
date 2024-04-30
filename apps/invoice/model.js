@@ -10,11 +10,11 @@ const invoiceSchema = new Schema({
     required: [true, 'deliver fee must be filled'],
   },
   delivery_address: {
-    province: { type: String, required: [true, 'Province must be filled'] },
-    regency: { type: String, required: [true, 'Regency must be filled'] },
-    district: { type: String, required: [true, 'District must be filled'] },
-    village: { type: String, required: [true, 'Village must be filled'] },
-    detail: { type: String },
+    provinsi: { type: String, required: [true, 'Provinsi must be filled'] },
+    kabupaten: { type: String, required: [true, 'Kabupaten must be filled'] },
+    kecamatan: { type: String, required: [true, 'Kecamatan must be filled'] },
+    kelurahan: { type: String, required: [true, 'Kelurahan must be filled'] },
+    detail_alamat: { type: String },
   },
   total: {
     type: Number,

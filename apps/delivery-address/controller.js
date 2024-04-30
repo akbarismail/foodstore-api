@@ -41,7 +41,7 @@ async function update(req, res, next) {
 
     const subjectAddress = subject(
       'DeliveryAddress',
-      { ...address, user: address.user },
+      { ...address, user_id: address.user },
     );
     if (!policy.can('update', subjectAddress)) {
       return res.json({
@@ -73,7 +73,7 @@ async function destroy(req, res, next) {
     const { id } = req.params;
 
     let address = await DeliveryAddress.findOne({ _id: id });
-    const subjectAddress = subject('DeliveryAddress', { ...address, user: address.user });
+    const subjectAddress = subject('DeliveryAddress', { ...address, user_id: address.user });
     if (!policy.can('delete', subjectAddress)) {
       return res.json({
         error: 1,
@@ -109,12 +109,13 @@ async function index(req, res, next) {
   try {
     const { limit = 10, skip = 0 } = req.query;
 
-    const count = await DeliveryAddress.find({ user: req.user._id }).countDocuments();
+    const count = await DeliveryAddress
+      .find({ user: req.user._id }).countDocuments();
 
     const deliveryAddresses = await DeliveryAddress
       .find({ user: req.user._id })
-      .limit(parseInt(limit, 10))
-      .skip(parseInt(skip, 10))
+      .limit(+limit)
+      .skip(+skip)
       .sort('-createdAt');
 
     return res.json({
