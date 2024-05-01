@@ -9,7 +9,7 @@ const { clientKey, serverKey } = require('../config');
 async function handleMidtransNotification(req, res) {
   try {
     const snap = new midtransClient.Snap({
-      isProduction: false,
+      isProduction: true,
       serverKey,
       clientKey,
     });
@@ -59,7 +59,7 @@ async function initiatePayment(req, res, next) {
     }
 
     const snap = new midtransClient.Snap({
-      isProduction: false,
+      isProduction: true,
       serverKey,
       clientKey,
     });
