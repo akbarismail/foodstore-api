@@ -9,7 +9,7 @@ const { clientKey, serverKey } = require('../config');
 async function handleMidtransNotification(req, res) {
   try {
     const snap = new midtransClient.Snap({
-      isProduction: true,
+      isProduction: false,
       serverKey,
       clientKey,
     });
